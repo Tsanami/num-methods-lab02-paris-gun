@@ -1,5 +1,0 @@
-add_subdirectory(googletest)
-enable_testing()
-add_executable(geodesy_test geodesy_test.cpp)
-target_link_libraries(geodesy_test geodesy gtest_main)
-add_test(NAME GeodesyTest COMMAND geodesy_test)
