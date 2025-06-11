@@ -81,20 +81,27 @@ int main() {
 
 
     double t0 = 0.0, tf = 300.0, dt = 0.1;
-    std::vector<std::vector<double>> results;
+    const int Nout = 256;        // сколько точек хотим в выводе
 
-    // Integrator Choice
-    RK4 integrator; 
-    //RKF45 integrator(1e-5); 
-    integrator.integrate(initial_conditions, t0, tf, dt, equations_of_motion, results);
+    std::vector<std::vector<double>> all;  // все шаги
+    RK4 integrator;
+    //RKF45 integrator(1e-5);
+    integrator.integrate(initial_conditions, t0, tf, dt, equations_of_motion, all);
 
-    // Output results
-    std::cout << "\nTrajectory (x, z) over time:\n";
-    for (const auto& result : results) {     
-        std::cout << "x: " << result[0] << ", z: " << result[1]
-                  << ", vx: " << result[2] << ", vz: " << result[3] << "\n";
+    // Теперь субдискретизируем all → results_out ровно Nout точек
+    std::vector<std::vector<double>> results_out;
+    int M = all.size();
+    for (int k = 0; k < Nout; ++k) {
+        int idx = (int)((double)k*(M-1)/(Nout-1) + 0.5);
+        results_out.push_back(all[idx]);
     }
 
+    // Печать
+    std::cout << "Trajectory (x, z) over time:\n";
+    for (auto &p : results_out) {
+        std::cout << "x: " << p[0] << ", z: " << p[1]
+                  << ", vx: " << p[2] << ", vz: " << p[3] << "\n";
+    }
     return 0;
 }
 
